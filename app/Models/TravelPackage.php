@@ -30,4 +30,15 @@ class TravelPackage extends Model
     {
         return $this->hasMany(Itinerary::class);
     }
+
+    public function imageUrl(): ?string
+    {
+        if ($this->cover_image_path) {
+            return str($this->cover_image_path)->startsWith(['http://', 'https://'])
+                ? $this->cover_image_path
+                : '/storage/'.$this->cover_image_path;
+        }
+
+        return $this->destination?->imageUrl();
+    }
 }
