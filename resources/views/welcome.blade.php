@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Travelcraft AI</title>
+    <title>Servizi ITS</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         :root {
             color-scheme: light;
@@ -18,7 +20,9 @@
             --sky: #d9eef1;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -37,7 +41,10 @@
             cursor: pointer;
         }
 
-        a { color: inherit; text-decoration: none; }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
         .shell {
             width: min(1180px, calc(100% - 32px));
@@ -124,8 +131,14 @@
             font-weight: 800;
         }
 
-        .language-switch summary::-webkit-details-marker { display: none; }
-        .language-switch svg { width: 17px; height: 17px; }
+        .language-switch summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .language-switch svg {
+            width: 17px;
+            height: 17px;
+        }
 
         .language-menu {
             position: absolute;
@@ -203,9 +216,8 @@
             min-height: 560px;
             border: 1px solid var(--line);
             border-radius: 8px;
-            background:
-                linear-gradient(135deg, rgba(15,107,95,.28), rgba(217,96,74,.16)),
-                url('{{ $settings->imageUrl('hero_image_path') }}') center/cover;
+            background: linear-gradient(135deg, rgba(15, 107, 95, .28), rgba(217, 96, 74, .16)),
+            url('{{ $settings->imageUrl('hero_image_path') }}') center/cover;
             position: relative;
         }
 
@@ -222,8 +234,14 @@
             backdrop-filter: blur(14px);
         }
 
-        .panel-strip strong { font-size: 18px; }
-        .panel-strip span { color: var(--muted); line-height: 1.5; }
+        .panel-strip strong {
+            font-size: 18px;
+        }
+
+        .panel-strip span {
+            color: var(--muted);
+            line-height: 1.5;
+        }
 
         .metrics {
             display: grid;
@@ -364,7 +382,9 @@
             color: white;
         }
 
-        .assistant-band p { color: #c9d8d4; }
+        .assistant-band p {
+            color: #c9d8d4;
+        }
 
         .assistant-grid {
             display: grid;
@@ -374,9 +394,9 @@
         }
 
         .assistant-box {
-            border: 1px solid rgba(255,255,255,.16);
+            border: 1px solid rgba(255, 255, 255, .16);
             border-radius: 8px;
-            background: rgba(255,255,255,.06);
+            background: rgba(255, 255, 255, .06);
             padding: 24px;
         }
 
@@ -393,38 +413,50 @@
         }
 
         @media (max-width: 860px) {
-            .nav-links { display: none; }
+            .nav-links {
+                display: none;
+            }
+
             .hero-grid,
             .assistant-grid,
             .grid {
                 grid-template-columns: 1fr;
             }
 
-            .hero { padding-top: 34px; }
-            .hero-panel { min-height: 380px; }
-            .metrics { grid-template-columns: 1fr; }
-            .section-head { align-items: start; flex-direction: column; }
+            .hero {
+                padding-top: 34px;
+            }
+
+            .hero-panel {
+                min-height: 380px;
+            }
+
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .section-head {
+                align-items: start;
+                flex-direction: column;
+            }
         }
     </style>
 </head>
+
 <body>
     <nav class="nav">
         <div class="shell nav-inner">
-            <a href="/" class="brand" aria-label="Travelcraft AI Startseite">
-                <span class="brand-mark">TA</span>
-                <span>Travelcraft AI</span>
+            <a href="/" class="brand" aria-label="Servizi ITS Startseite">
+                <span class="brand-mark">SI</span>
+                <span>Servizi ITS</span>
             </a>
             <div class="nav-links" aria-label="Hauptnavigation">
                 <a href="{{ route('destinations.index') }}">{{ __('Destinations') }}</a>
                 <a href="{{ route('packages.index') }}">{{ __('Packages') }}</a>
                 <a href="{{ route('posts.index') }}">{{ __('Posts') }}</a>
+                <a href="{{ route('contact.create') }}">{{ __('Contact') }}</a>
                 <a href="#assistant">{{ __('AI Assistant') }}</a>
                 <a href="/admin" class="button secondary">{{ __('Admin') }}</a>
-                @auth
-                    <a href="{{ route('customer.dashboard') }}" class="button secondary">{{ __('Dashboard') }}</a>
-                @else
-                    <a href="{{ route('login') }}" class="button secondary">{{ __('Customer Login') }}</a>
-                @endauth
                 <details class="language-switch">
                     <summary aria-label="Language">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -435,7 +467,7 @@
                     </summary>
                     <div class="language-menu">
                         @foreach (config('app.supported_locales') as $locale => $label)
-                            <a class="{{ app()->getLocale() === $locale ? 'active' : '' }}" href="{{ route('language.switch', $locale) }}">{{ $label }}</a>
+                        <a class="{{ app()->getLocale() === $locale ? 'active' : '' }}" href="{{ route('language.switch', $locale) }}">{{ $label }}</a>
                         @endforeach
                     </div>
                 </details>
@@ -454,7 +486,7 @@
                     </p>
                     <div class="hero-actions">
                         <a class="button" href="/admin">{{ __($settings->primary_button_label) }}</a>
-                        <a class="button secondary" href="{{ route('login') }}">{{ __($settings->secondary_button_label) }}</a>
+                        <a class="button secondary" href="{{ route('contact.create') }}">{{ __($settings->secondary_button_label) }}</a>
                         <a class="button secondary" href="{{ route('packages.index') }}">{{ __($settings->tertiary_button_label) }}</a>
                     </div>
                     <div class="metrics" aria-label="Projektmodule">
@@ -480,26 +512,26 @@
                 </div>
                 <div class="grid">
                     @forelse ($destinations as $destination)
-                        <a class="card card-link" href="{{ route('destinations.show', $destination) }}" aria-label="{{ $destination->name }}">
-                            <div class="card-image">
-                                @if ($destination->imageUrl())
-                                    <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" loading="lazy">
-                                @endif
-                                <span class="tag">{{ $destination->country }}</span>
-                            </div>
-                            <div class="card-body">
-                                <h3>{{ $destination->name }}</h3>
-                                <p>{{ $destination->summary }}</p>
-                            </div>
-                        </a>
+                    <a class="card card-link" href="{{ route('destinations.show', $destination) }}" aria-label="{{ $destination->name }}">
+                        <div class="card-image">
+                            @if ($destination->imageUrl())
+                            <img src="{{ $destination->imageUrl() }}" alt="{{ $destination->name }}" loading="lazy">
+                            @endif
+                            <span class="tag">{{ $destination->country }}</span>
+                        </div>
+                        <div class="card-body">
+                            <h3>{{ $destination->name }}</h3>
+                            <p>{{ $destination->summary }}</p>
+                        </div>
+                    </a>
                     @empty
-                        <article class="card">
-                            <div class="card-body">
-                                <span class="tag">Draft</span>
-                                <h3>{{ __('No destinations yet') }}</h3>
-                                <p>{{ __('Create published destinations in the admin panel and they will appear here.') }}</p>
-                            </div>
-                        </article>
+                    <article class="card">
+                        <div class="card-body">
+                            <span class="tag">Draft</span>
+                            <h3>{{ __('No destinations yet') }}</h3>
+                            <p>{{ __('Create published destinations in the admin panel and they will appear here.') }}</p>
+                        </div>
+                    </article>
                     @endforelse
                 </div>
             </div>
@@ -513,29 +545,29 @@
                 </div>
                 <div class="grid">
                     @forelse ($packages as $package)
-                        <a class="card card-link" href="{{ route('packages.show', $package) }}" aria-label="{{ $package->title }}">
-                            <div class="card-image">
-                                @if ($package->imageUrl())
-                                    <img src="{{ $package->imageUrl() }}" alt="{{ $package->title }}" loading="lazy">
-                                @endif
-                                <span class="tag">{{ $package->destination?->name ?? 'Custom' }}</span>
+                    <a class="card card-link" href="{{ route('packages.show', $package) }}" aria-label="{{ $package->title }}">
+                        <div class="card-image">
+                            @if ($package->imageUrl())
+                            <img src="{{ $package->imageUrl() }}" alt="{{ $package->title }}" loading="lazy">
+                            @endif
+                            <span class="tag">{{ $package->destination?->name ?? 'Custom' }}</span>
+                        </div>
+                        <div class="card-body">
+                            <h3>{{ $package->title }}</h3>
+                            <p>{{ $package->teaser }}</p>
+                            <div class="price">
+                                {{ __('From') }} {{ number_format((float) $package->price_from, 0, ',', '.') }} {{ $package->currency }} · {{ $package->duration_days }} {{ __('days') }}
                             </div>
-                            <div class="card-body">
-                                <h3>{{ $package->title }}</h3>
-                                <p>{{ $package->teaser }}</p>
-                                <div class="price">
-                                    {{ __('From') }} {{ number_format((float) $package->price_from, 0, ',', '.') }} {{ $package->currency }} · {{ $package->duration_days }} {{ __('days') }}
-                                </div>
-                            </div>
-                        </a>
+                        </div>
+                    </a>
                     @empty
-                        <article class="card">
-                            <div class="card-body">
-                                <span class="tag">Draft</span>
-                                <h3>{{ __('No packages yet') }}</h3>
-                                <p>{{ __('Create published travel packages in the admin panel and they will appear here.') }}</p>
-                            </div>
-                        </article>
+                    <article class="card">
+                        <div class="card-body">
+                            <span class="tag">Draft</span>
+                            <h3>{{ __('No packages yet') }}</h3>
+                            <p>{{ __('Create published travel packages in the admin panel and they will appear here.') }}</p>
+                        </div>
+                    </article>
                     @endforelse
                 </div>
             </div>
@@ -566,27 +598,27 @@
                 </div>
                 <div class="grid">
                     @forelse ($posts as $post)
-                        <article class="card">
-                            <div class="card-image">
-                                @if ($post->imageUrl())
-                                    <img src="{{ $post->imageUrl() }}" alt="{{ $post->title }}" loading="lazy">
-                                @endif
-                                <span class="tag">{{ $post->published_at?->format('d.m.Y') }}</span>
-                            </div>
-                            <div class="card-body">
-                                <h3>{{ $post->title }}</h3>
-                                <p>{{ $post->excerpt }}</p>
-                                <div class="price"><a href="{{ route('posts.show', $post) }}">{{ __('Read article') }}</a></div>
-                            </div>
-                        </article>
+                    <article class="card">
+                        <div class="card-image">
+                            @if ($post->imageUrl())
+                            <img src="{{ $post->imageUrl() }}" alt="{{ $post->title }}" loading="lazy">
+                            @endif
+                            <span class="tag">{{ $post->published_at?->format('d.m.Y') }}</span>
+                        </div>
+                        <div class="card-body">
+                            <h3>{{ $post->title }}</h3>
+                            <p>{{ $post->excerpt }}</p>
+                            <div class="price"><a href="{{ route('posts.show', $post) }}">{{ __('Read article') }}</a></div>
+                        </div>
+                    </article>
                     @empty
-                        <article class="card">
-                            <div class="card-body">
-                                <span class="tag">Draft</span>
-                                <h3>{{ __('No posts yet') }}</h3>
-                                <p>{{ __('Published posts will appear here.') }}</p>
-                            </div>
-                        </article>
+                    <article class="card">
+                        <div class="card-body">
+                            <span class="tag">Draft</span>
+                            <h3>{{ __('No posts yet') }}</h3>
+                            <p>{{ __('Published posts will appear here.') }}</p>
+                        </div>
+                    </article>
                     @endforelse
                 </div>
             </div>
@@ -594,7 +626,10 @@
     </main>
 
     <footer>
-        <div class="shell">Travelcraft AI · {{ __('Laravel, Filament and an agent-ready travel workflow.') }}</div>
+        <div class="shell">Servizi ITS · {{ __('Laravel, Filament and an agent-ready travel workflow.') }}</div>
     </footer>
+
+    <div id="vanessa-travel-assistant"></div>
 </body>
+
 </html>

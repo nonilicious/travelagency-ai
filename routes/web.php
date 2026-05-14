@@ -1,11 +1,11 @@
 <?php
 
-use App\Http\Controllers\CustomerAuthController;
-use App\Http\Controllers\CustomerDashboardController;
-use App\Http\Controllers\CustomerProfileController;
+use App\Http\Controllers\AdminPostPreviewController;
+use App\Http\Controllers\ContactInquiryController;
 use App\Http\Controllers\PublicDestinationController;
 use App\Http\Controllers\PublicPostController;
 use App\Http\Controllers\PublicTravelPackageController;
+use App\Http\Middleware\EnsureAdmin;
 use App\Models\Destination;
 use App\Models\Post;
 use App\Models\SiteSetting;
@@ -53,17 +53,9 @@ Route::get('/destinations', [PublicDestinationController::class, 'index'])->name
 Route::get('/destinations/{destination:slug}', [PublicDestinationController::class, 'show'])->name('destinations.show');
 Route::get('/packages', [PublicTravelPackageController::class, 'index'])->name('packages.index');
 Route::get('/packages/{package:slug}', [PublicTravelPackageController::class, 'show'])->name('packages.show');
+Route::get('/contact', [ContactInquiryController::class, 'create'])->name('contact.create');
+Route::post('/contact', [ContactInquiryController::class, 'store'])->name('contact.store');
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [CustomerAuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [CustomerAuthController::class, 'login'])->name('login.store');
-    Route::get('/register', [CustomerAuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [CustomerAuthController::class, 'register'])->name('register.store');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', CustomerDashboardController::class)->name('customer.dashboard');
-    Route::get('/profile', [CustomerProfileController::class, 'edit'])->name('customer.profile.edit');
-    Route::patch('/profile', [CustomerProfileController::class, 'update'])->name('customer.profile.update');
-    Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout');
+Route::middleware(['auth', EnsureAdmin::class])->prefix('admin-preview')->name('admin.preview.')->group(function () {
+    Route::get('/posts/{post}', [AdminPostPreviewController::class, 'show'])->name('posts.show');
 });

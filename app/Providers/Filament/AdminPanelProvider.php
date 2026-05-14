@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->profile(EditProfile::class, isSimple: false)
-            ->brandName('Travelcraft AI')
+            ->brandName('Servizi ITS')
             ->colors([
                 'primary' => Color::Teal,
             ])

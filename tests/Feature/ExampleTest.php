@@ -6,7 +6,10 @@ use App\Models\Destination;
 use App\Models\Post;
 use App\Models\TravelPackage;
 use App\Models\User;
+use App\Mail\CustomerInquiryConfirmation;
+use App\Mail\CustomerInquiryReceived;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
@@ -23,16 +26,37 @@ class ExampleTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_authenticated_customer_can_view_profile(): void
+    public function test_customer_can_send_contact_request_without_account(): void
     {
-        $user = User::factory()->create([
-            'preferred_locale' => 'de',
+        Mail::fake();
+
+        User::factory()->create([
+            'role' => 'admin',
+            'email' => 'agency@example.com',
         ]);
 
-        $this->actingAs($user)
-            ->get('/profile')
-            ->assertStatus(200)
-            ->assertSee('Profil');
+        $response = $this->post(route('contact.store'), [
+            'name' => 'Mara Test',
+            'email' => 'mara@example.com',
+            'phone' => '+43 123',
+            'destination_interest' => 'Italy coast',
+            'travelers' => 2,
+            'preferred_start_date' => '2026-07-01',
+            'preferred_end_date' => '2026-07-10',
+            'budget' => 4500,
+            'message' => 'We want a calm premium trip with sea views.',
+        ]);
+
+        $response->assertRedirect(route('contact.create'));
+
+        $this->assertDatabaseHas('customer_inquiries', [
+            'email' => 'mara@example.com',
+            'destination_interest' => 'Italy coast',
+            'status' => 'new',
+        ]);
+
+        Mail::assertSent(CustomerInquiryReceived::class, fn (CustomerInquiryReceived $mail) => $mail->hasTo('agency@example.com'));
+        Mail::assertSent(CustomerInquiryConfirmation::class, fn (CustomerInquiryConfirmation $mail) => $mail->hasTo('mara@example.com'));
     }
 
     public function test_authenticated_admin_can_view_filament_profile(): void
@@ -56,6 +80,7 @@ class ExampleTest extends TestCase
             'slug' => 'a-better-itinerary',
             'excerpt' => 'A short travel planning note.',
             'body' => '<p>Useful detail for travelers.</p>',
+            'status' => Post::STATUS_PUBLISHED,
             'published_at' => now(),
         ]);
 
@@ -63,6 +88,46 @@ class ExampleTest extends TestCase
             ->assertStatus(200)
             ->assertSee('A better itinerary')
             ->assertSee('Useful detail for travelers', false);
+    }
+
+    public function test_admin_can_preview_unpublished_ai_post(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+        ]);
+        $post = Post::create([
+            'user_id' => $admin->id,
+            'title' => 'AI draft about Sicily',
+            'slug' => 'ai-draft-about-sicily',
+            'excerpt' => 'A draft excerpt.',
+            'body' => '<p>Draft body for review.</p>',
+            'status' => Post::STATUS_DRAFT_AI,
+            'ai_generated' => true,
+            'ai_prompt' => 'Write a travel article about Sicily.',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.preview.posts.show', $post))
+            ->assertStatus(200)
+            ->assertSee('Admin preview')
+            ->assertSee('AI generated')
+            ->assertSee('Draft body for review', false);
+    }
+
+    public function test_customer_cannot_preview_admin_post_draft(): void
+    {
+        $customer = User::factory()->create();
+        $post = Post::create([
+            'title' => 'Hidden draft',
+            'slug' => 'hidden-draft',
+            'excerpt' => 'Hidden.',
+            'body' => '<p>Hidden body.</p>',
+            'status' => Post::STATUS_DRAFT_AI,
+        ]);
+
+        $this->actingAs($customer)
+            ->get(route('admin.preview.posts.show', $post))
+            ->assertForbidden();
     }
 
     public function test_public_package_detail_is_available(): void

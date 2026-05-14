@@ -34,15 +34,6 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
-        User::query()->updateOrCreate(
-            ['email' => 'customer@travelagency.test'],
-            [
-                'name' => 'Mira Sommer',
-                'password' => Hash::make('password'),
-                'role' => 'customer',
-            ],
-        );
-
         $kyoto = Destination::query()->updateOrCreate(
             ['slug' => 'kyoto-japan'],
             [
@@ -165,6 +156,10 @@ class DatabaseSeeder extends Seeder
                 'excerpt' => 'Warum gute Reiseplanung mehr ist als eine Liste schoener Orte.',
                 'body' => 'Wir kombinieren Timing, Wege, Energielevel, lokale Expertise und persoenliche Vorlieben zu Reiseplaenen, die sich leicht anfuehlen.',
                 'cover_image_path' => 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1200&q=80',
+                'status' => 'published',
+                'ai_generated' => false,
+                'reviewed_by' => $admin->id,
+                'reviewed_at' => now(),
                 'published_at' => now(),
             ],
         );
