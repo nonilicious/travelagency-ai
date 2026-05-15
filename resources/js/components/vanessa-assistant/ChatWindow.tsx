@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { FormEvent } from 'react';
 import type { AssistantMessage } from './types';
 import { TypingIndicator } from './TypingIndicator';
-import { VanessaAvatar } from './VanessaAvatar';
+import { VanessaSpriteAvatar } from './VanessaSpriteAvatar';
 
 type ChatWindowProps = {
     draft: string;
@@ -47,8 +47,8 @@ export function ChatWindow({
                     <div className="relative border-b border-white/60 bg-gradient-to-br from-emerald-950/90 via-stone-900/88 to-stone-800/86 p-5 text-white">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_0%,rgba(255,255,255,.22),transparent_34%)]" />
                         <div className="relative flex items-center gap-4">
-                            <div className="grid h-16 w-14 place-items-end rounded-2xl bg-white/12 ring-1 ring-white/20">
-                                <VanessaAvatar mood="idle" size="small" />
+                            <div className="grid h-16 w-14 place-items-end overflow-hidden rounded-2xl bg-white/12 ring-1 ring-white/20">
+                                <VanessaSpriteAvatar mood={isTyping ? 'thinking' : 'idle'} size="small" />
                             </div>
                             <div className="min-w-0 flex-1">
                                 <p className="!m-0 !text-xs !font-semibold !uppercase !leading-5 !tracking-[0.18em] !text-emerald-100/80">Travel assistant</p>

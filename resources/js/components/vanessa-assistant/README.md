@@ -4,6 +4,7 @@ Animated React/Next.js assistant inspired by the Vanessa character sheet:
 
 - floating bottom-right assistant
 - idle breathing, swaying and walking offsets
+- real sprite assets extracted from the Vanessa character sheet
 - inactive wave after 10 seconds
 - destination suggestions and peek behavior
 - glassmorphism chat window
@@ -50,6 +51,16 @@ content: ['./src/**/*.{ts,tsx}'];
 ## Laravel/Vite React Island
 
 This repository is currently Laravel Blade, not Next.js. To use Vanessa directly here, add React support to Vite and mount `<FloatingTravelAssistant />` into a small DOM node in the public layout.
+
+## Character Assets
+
+The current live assistant uses sprite images in:
+
+```text
+public/images/vanessa
+```
+
+These are lightweight WebP crops from the uploaded character sheet. The React logic can later be switched to a `.riv` file without changing the chat window.
 
 ## Customizing Messages
 

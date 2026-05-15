@@ -5,8 +5,8 @@ import { destinationSuggestions, initialMessages } from './assistant-data';
 import type { AssistantMessage, VanessaMood } from './types';
 
 const WELCOME_DELAY_MS = 10_000;
-const INACTIVE_WAVE_MS = 18_000;
-const PEEK_AFTER_MS = 34_000;
+const INACTIVE_WAVE_MS = 8_000;
+const PEEK_AFTER_MS = 24_000;
 
 const createId = () => globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
 
@@ -118,12 +118,15 @@ export function useVanessaAssistant() {
 
             setMood('walk');
             setWalkOffset({
-                x: Math.round(Math.random() * 18 - 9),
-                y: Math.round(Math.random() * 10 - 5),
+                x: -Math.round(120 + Math.random() * 220),
+                y: -Math.round(8 + Math.random() * 42),
             });
 
-            window.setTimeout(() => setMood('idle'), 1400);
-        }, 12_000);
+            window.setTimeout(() => {
+                setWalkOffset({ x: 0, y: 0 });
+                setMood('idle');
+            }, 4600);
+        }, 7_000);
 
         return () => window.clearInterval(interval);
     }, [isOpen, mood]);
